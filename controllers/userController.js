@@ -1,37 +1,32 @@
-//SQL
-//MySQL
+
+// //SQL (query) — mySQL
 const connection = require('../config/db');
-//GET
+
 exports.getAllUsers = (req, res) => {
-    connection.query('SELECT * FROM water_bills', (err, rows, fields) => {
-        if (err) throw err;
-        res.json(rows);
-    });
+    connection.query('SELECT * FROM emrollment_bills', (err, rows, fields) => {
+        if (err) throw err;
+        res.json(rows);
+    });
 };
 
-
-
-//POST
+//POST — Create
 exports.createUser=(req,res)=>{
-    const {meter,consumer,cubic,amount,status}=req.body;
-    connection.query('INSERT INTO water_bills (meter_number,consumer_name,cubic_meters_used,total_amount,status) VALUES (?,?,?,?,?)',[meter,consumer,cubic,amount,status],(err,result)=>{
-        if(err) throw err;
-        res.json({message:'User created successfully',id:result.insertId});
-    });
-}
+    const {id,name,course,units,tuition}=req.body;  
+    connection.query('INSERT INTO enrollment_bills (student_id,student_name,course_program,units_enrolled,tuition_total,) VALUES (?,?,?,?,?)',[id,name,course,units,tuition],(err,result)=>{
+        if(err) throw err;
+        res.json({message:'enrollment created successfully',id:result.insertId});
+    });
+};
 
-
-//UPDATE
+//PUT (update/edit)
 exports.updateUser=(req,res)=>{
-    const {consumer,cubic,amount,status,meter}=req.body;
-    connection.query('UPDATE water_bills SET consumer_name=?,cubic_meters_used=?,total_amount=?,status=? WHERE meter_number=? ',[consumer,cubic,amount,status,meter],(err,result)=>{
+    const {id,name,course,units,tuition}=req.body; 
+    connection.query(
+        "UPDATE enrollment_bills SET student_id=?, student_name=?, course_program=?, units_enrolled=?, tuition_total=?, department=? WHERE id=?",[id,name,course,units,tuition], (err,result)=>{
         if(err) throw err;
-        if(result.affectedRows>0)
-            res.json({message:'User updated successfully'});
+        if(result.affectedRows>0)
+            res.json({message:'enrollment updated successfully'});
         else
-            res.status(404).json({message:'User not found'});
-});
-}
-
-
-
+            res.status(404).json({message: 'User not found'});
+    });
+};
